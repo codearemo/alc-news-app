@@ -1,0 +1,6 @@
+{
+  "projects": {
+    "news": "alc-news",
+    "default": "alc-news"
+  }
+}

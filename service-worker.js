@@ -1,6 +1,4 @@
-var cacheName = 'News-post-v7';
-var contentImgCache = 'News-post-imgs-v1';
-var allCaches = [cacheName, contentImgCache];
+var cacheName = 'News-post-v3';
 
 var appShellFiles = [
   '/',
@@ -25,16 +23,15 @@ self.addEventListener('install', (e) => {
 
 
 self.addEventListener('activate', (e) => {
-  console.log('[ServiceWorker] Activated');
+  console.log('[ServiceWorker] Activate');
   e.waitUntil(
     caches.keys().then((keyList) => {
-      return Promise.all(keyList.filter(key => {
-          return !allCaches.includes(key);
-        })
-        .map(key => {
+      return Promise.all(keyList.map((key) => {
+        if (key !== cacheName) {
+          console.log('[ServiceWorker] Removing old cache', key);
           return caches.delete(key);
-        })
-      );
+        }
+      }));
     })
   );
   return self.clients.claim();
@@ -43,28 +40,27 @@ self.addEventListener('activate', (e) => {
 
 self.addEventListener('fetch', function(e) {
   console.log('[ServiceWorker] Fetch', e.request.url);
-  // var requestUrl = new URL(e.request.url);
-  if(e.request.url.endsWith == '.jpg' || e.request.url.endsWith == '.png') {
-    e.respondWith(serveImgs(e.request));
-    return;
-  }
-// Trying to cache images but not sure why she's not working :-(
-  function serveImgs(request) {
-    return caches.open(contentImgCache).then(cache => {
-      return cache.match(request.url).then(response => {
-        if (response) return response;
-        return fetch(request).then(networkResponse => {
-          cache.put(request.url, networkResponse.clone());
-          return networkResponse;
-        });
+  // caching images
+  if (e.request.url.endsWith('.jpg') || e.request.url.endsWith('.png')) {
+    e.respondWith(
+      caches.match(e.request).then(response => {
+        if (response) {
+          console.log('[ServiceWorker] Fetch found in cache', e.request.url);
+          return response
+        };
+        fetch(e.request.clone()).then(response => {
+          if(!response) {
+            console.log("[Service worker] no response fetch");
+            return response;
+          }
+          caches.open(cacheName).then(cache => {
+            cache.put(e.request, response.clone());
+            return response;
+          });
+        }).catch(err => {
+          console.log("[Service worker] Error fetching and caching");
+        }); 
       })
-    });
+    );
   }
-
-  e.respondWith(
-    caches.match(e.request).then(function(response) {
-      if (response) return response;
-      return fetch(e.request);
-    })
-  );
 });
