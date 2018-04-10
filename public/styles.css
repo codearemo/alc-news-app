@@ -84,7 +84,7 @@ h1 {
     /* **********************************Switch Tabs Styles Start***************************************** */
 #tab_section {
   width: 100%;
-  overflow-x: hidden;
+  overflow: auto;
 }
 
 .countries {
