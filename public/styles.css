@@ -84,7 +84,8 @@ h1 {
     /* **********************************Switch Tabs Styles Start***************************************** */
 #tab_section {
   width: 100%;
-  overflow: auto;
+  height: 40vh;
+  overflow-y: auto;
 }
 
 .countries {
