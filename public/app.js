@@ -41,10 +41,7 @@ function fetchNews(country_origin) {
   fetch(`https://newsapi.org/v2/top-headlines?country=${country_origin}&apiKey=b171349b7d754710b8976f23a9192fa2`)
     .then(response => response.json())
     .then(result => {
-      // console.log(result.articles);
       OpenIDB().then(db => {
-        console.log(db);
-        // if (!db) return;
         var tx = db.transaction('alc-news', 'readwrite');
         var store = tx.objectStore('alc-news');
         result.articles.map(article => {
@@ -158,12 +155,6 @@ function loadPosts(posts) {
     </div>
   </div>`
   ).join("");
-
-  document.querySelectorAll(".country_source").forEach(country => {
-    country.addEventListener('click', () => {
-      fetchNews(country.innerHTML);
-    });
-  });
 }
 
 
@@ -182,21 +173,13 @@ document.querySelector("#search_nav").addEventListener('change', (e) => {
 
 // To switch the tab in view for countries tab and sources tab
 document.querySelector("#source-search").addEventListener('click', () => {
-  document.querySelector("#countries-hold").style.height = 0;
   document.querySelector("#search_nav").style.display = "block";
-  document.querySelectorAll(".countries").forEach(country => country.style.display = "none");
+  document.querySelector("#country_nav").style.display = "none";
 });
 
 document.querySelector("#countries-list").addEventListener('click', () => {
   document.querySelector("#search_nav").style.display = "none";
-  document.querySelector("#countries-hold").style.height = "40vh";
-  document.querySelectorAll(".countries").forEach(country => {
-    country.style.display = "inline-block";
-    country.addEventListener('click', () => {
-      document.querySelector("#countries-hold").style.height = 0;
-      document.querySelectorAll(".countries").forEach(country => country.style.display = "none"); 
-    });
-  });
+  document.querySelector("#country_nav").style.display = "block";
 });
 
   
@@ -210,6 +193,12 @@ window.addEventListener('load', () => {
   document.querySelector("#search_nav").style.display = "none";
   document.querySelectorAll(".countries").forEach(country => country.style.display = "none");
   newsFromSource(default_source);
+});
+
+
+// To select news using country filter
+document.querySelector("#country_nav").addEventListener('change', e => {
+  fetchNews(e.target.value);
 });
 
 
