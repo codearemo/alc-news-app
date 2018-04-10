@@ -182,6 +182,7 @@ document.querySelector("#search_nav").addEventListener('change', (e) => {
 
 // To switch the tab in view for countries tab and sources tab
 document.querySelector("#source-search").addEventListener('click', () => {
+  document.querySelector("#countries-hold").style.height = 0;
   document.querySelector("#search_nav").style.display = "block";
   document.querySelectorAll(".countries").forEach(country => country.style.display = "none");
 });
