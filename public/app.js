@@ -188,6 +188,7 @@ document.querySelector("#source-search").addEventListener('click', () => {
 
 document.querySelector("#countries-list").addEventListener('click', () => {
   document.querySelector("#search_nav").style.display = "none";
+  document.querySelector("#tab_section").style.height = "40vh";
   document.querySelectorAll(".countries").forEach(country => {
     country.style.display = "inline-block";
     country.addEventListener('click', () => {
