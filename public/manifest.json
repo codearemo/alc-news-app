@@ -1,8 +1,8 @@
 {
   "name": "ALC News",
   "short_name": "ALC News",
-  "theme_color": "#ac193d",
-  "background_color": "#ac193d",
+  "theme_color": "#eee",
+  "background_color": "#eee",
   "display": "standalone",
   "start_url": ".",
   "icons": [
